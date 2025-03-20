@@ -3,18 +3,17 @@
 module instruction_decoder(input logic[6:0] immediate,
                            input logic[5:0] nzimm,
                            input logic[8:0] offset,
-                           input logic[3:0] opcode_in,
-                           output logic RegWrite, RegDst, ALUSrc1, ALUSrc2, MemWrite, MemToReg, RegSrc,
-                           output logic[3:0] opcode_out, ALUOp,
+                           input logic[3:0] opcode,
+                           output logic RegWrite, RegDst, ALUSrc1, ALUSrc2, MemWrite, MemToReg, Regsrc,
+                           output logic[3:0] ALUOp,
                            output logic[15:0] instr_i);
                            
                            always_comb
                            begin
-                               opcode_out = opcode_in;
                                ALUSrc1 = 0;
-                               MemToReg = opcode_in == 4'b0000;
-                               MemWrite= opcode_in == 4'b0001;
-                               case(opcode_in)
+                               MemToReg = opcode == 4'b0000;
+                               MemWrite= opcode == 4'b0001;
+                               case(opcode)
                                //LOAD WORD -> lw
                                 4'b0000:
                                 begin
@@ -23,7 +22,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = immediate;
                                     ALUSrc2 = 1;
                                     ALUOp = 0;
-                                    RegSrc = 0;
+                                    Regsrc = 0;
                                 end
                                 
                                 //STORE WORD -> sw
@@ -34,7 +33,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = immediate;
                                     ALUSrc2 = 1;
                                     ALUOp = 0;
-                                    RegSrc = 0;
+                                    Regsrc = 0;
                                 end
                                 
                                 //ADD -> add
@@ -45,7 +44,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = 0;
                                     ALUSrc2 = 0;
                                     ALUOp = 0;
-                                    RegSrc = 1;
+                                    Regsrc = 1;
                                 end
                                 
                                 //ADD IMMEDIATE -> addi
@@ -56,7 +55,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = nzimm;
                                     ALUSrc2 = 1;
                                     ALUOp = 0;
-                                    RegSrc = 1;
+                                    Regsrc = 1;
                                 end
                                 
                                 //AND -> and
@@ -67,7 +66,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = 0;
                                     ALUSrc2 = 0;
                                     ALUOp = 2;
-                                    RegSrc = 1;
+                                    Regsrc = 1;
                                 end
                                 
                                 //AND IMMEDIATE -> andi
@@ -78,7 +77,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = immediate;
                                     ALUSrc2 = 1;
                                     ALUOp = 2;
-                                    RegSrc = 1;
+                                    Regsrc = 1;
                                 end
                                 
                                 //OR -> or
@@ -89,7 +88,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = 0;
                                     ALUSrc2 = 0;
                                     ALUOp = 3;
-                                    RegSrc = 1;
+                                    Regsrc = 1;
                                 end
                                 
                                 //XOR -> xor
@@ -100,7 +99,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = 0;
                                     ALUSrc2 = 1;
                                     ALUOp = 8;
-                                    RegSrc = 1;
+                                    Regsrc = 1;
                                 end
                                 
                                 //ARITHMETIC RIGHT SHIFT IMMEDIATE -> srai
@@ -111,7 +110,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = nzimm;
                                     ALUSrc2 = 1;
                                     ALUOp = 4;
-                                    RegSrc = 1;
+                                    Regsrc = 1;
                                 end
                                 
                                 //LOGICAL SHIFT LEFT IMMEDIATE -> slli
@@ -122,7 +121,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = nzimm;
                                     ALUSrc2 = 1;
                                     ALUOp = 5;
-                                    RegSrc = 1;
+                                    Regsrc = 1;
                                 end
                                 
                                 //BRANCH EQUALS -> beqz
@@ -133,7 +132,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = offset;
                                     ALUSrc2 = 1;
                                     ALUOp = 6;
-                                    RegSrc = 0;
+                                    Regsrc = 0;
                                 end
                                 
                                 //BRANCH NOT EQUALS -> bneqz
@@ -144,7 +143,7 @@ module instruction_decoder(input logic[6:0] immediate,
                                     instr_i = offset;
                                     ALUSrc2 = 1;
                                     ALUOp = 7;
-                                    RegSrc = 0;
+                                    Regsrc = 0;
                                 end
                              endcase
                            end     
