@@ -27,15 +27,15 @@ module regfile(input logic rst, clk, wr_en,
                 end
 endmodule
 
-module TwoToOneMux(input logic[15:0] data1, data2,
-              input logic sel,
-              output logic[15:0] d);
+module TwoToOneMux(input logic[15:0] a, b,
+              input logic sel_mux,
+                   output logic[15:0] out);
               always_comb
               begin
-               if(sel)
-                d = data2;
+                if(sel_mux)
+                out = b;
                else
-                d = data1;
+                out = a;
               end
 endmodule
 
